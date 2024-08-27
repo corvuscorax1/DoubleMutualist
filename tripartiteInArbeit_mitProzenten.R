@@ -1,41 +1,53 @@
-# My tripartite plotting function
-# Adjusted from plotweb2() in bipartite
+# doubleMutualist()
+# A function to visualize double mutualistic interactions in a very simple and
+# comprehensive plot
 
-myTripartite <- 
+# Adjusted from plotweb2() in the R-package "bipartite"
+
+doubleMutualist <- 
+  
   function (
-            web, web2, 
-            method = "cca", empty=FALSE, labsize=1, 
-            ybig=1, y_width=0.1, arrow="no", 
-            
-            lab.space=1,  high.abun=NULL, 
-            lablength=NULL, sequence=NULL, low.abun=NULL, 
-            method2 = "cca", empty2=TRUE, arrow2 = "no", 
-            lablength2 = NULL, 
-            sequence.pred2 = NULL, low.abun2 = NULL, 
-            high.abun2 = NULL,
-            
-            # Colorsettings for interactions between species (in lower and upper web)
-            col.interaction1 = "grey80", col.interaction2 = "grey80",
-            
-            # Colorsettings for the doublemutualists
-            col.middle = "grey10",  col.middle2 = "grey10", 
-            col.border.middle = "grey10", col.border.middle2 = "grey10",
-            # Colorsettings for species the doublemutualists interact with (lower and upper web)
-            col.prey = "grey10", col.pred2 = "grey10",
-            
-            # In case we add a separate vector for abundance of species
-            low.abun.col = "green",  high.abun.col = "red", 
-            low.abun.col2 = "green", high.abun.col2 = "red",
-            
-            # Colorsettings for the labels
-            col.text.low="black", col.text.high="black",
-            col.text.doubleMutualist="black"
-            ) 
+    
+    
+    web, web2, 
+    method="cca", method2="cca",
+    empty=FALSE, empty2=TRUE, 
+    
+    labsize=1, lab.space=1, 
+    
+    ybig=1, y_width=0.1, 
+    arrow="no", arrow2="no", 
+    
+    high.abun=NULL, low.abun=NULL, 
+    high.abun2=NULL, low.abun2=NULL,
+    lablength=NULL, lablength2=NULL, 
+    sequence=NULL, sequence.pred2=NULL,
+     
+    # For col.middle, col.middle2, col.interaction and col.interaction2, we will 
+    # be able to pass a customized vector of colors, 
+    # to color different species depending on how we want them to look.
+    # E.g. we can color all species of a specific genus a certain color etc.
+    
+    # Colorsettings for interactions between species (in lower and upper web)
+    col.interaction1 = "grey80", col.interaction2 = "grey80",
+    
+    # Colorsettings for the doublemutualists
+    col.middle = "grey10",  col.middle2 = "grey10", 
+    
+    # Colorsettings for species the doublemutualists interact with (lower and upper web)
+    col.prey = "grey10", col.pred2 = "grey10",
+    
+    # In case we add a separate vector for abundance of species
+    low.abun.col = "green",  high.abun.col = "red", 
+    low.abun.col2 = "green", high.abun.col2 = "red",
+    
+    # Colorsettings for the labels
+    col.text.low="black", col.text.high="black",
+    col.text.doubleMutualist="black"
+    
+  ) 
 
-# For col.middle, col.middle2, col.interaction and col.interaction2, we will 
-# be able to pass a customized vector of colors, 
-# to color different species depending on how we want them to look.
-# E.g. we can color all species of a specific genus a certain color etc.
+# Let's define the function now
 
   {
     
@@ -71,6 +83,7 @@ myTripartite <-
     # Calculate the total number of interactions in the lower web
     # I.e. the web that will be plotted at the bottom
     websum <- sum(web)
+    
     # difff and diffh are vectors that calculate the difference between the frequeny
     # of species in the original web (i.e. interactions) and frequencies that could 
     # specifically be provided (e.g. independent observations) as high.abun & low.abun
@@ -116,8 +129,15 @@ myTripartite <-
       pred_prop <- colSums(web)/websum
     # And if not, we use what we calculated one step above
     else pred_prop <- highfreq/websum
+    
+    # We can also define the abundance of the double mutualist as the number of
+    # individuals that we counted / captured
     # Abundance as a measure of individuals that were caught
-    pred_propCaught <- birdAbun/sum(birdAbun)
+    # Here, we use birds as double mutualists
+    # birdAbun should be a vector, containing the number of counted individuals for
+    # those species that appear in the network.
+    # (maybe we could also include here those species where we have no interaction?)
+    prop_doubleMutCounted <- birdAbun/sum(birdAbun)
     
     # We calculate the proportional importance of each species in the lower dimension
     # These are the specoes that double mutualists interact with (here seen from the first web
@@ -168,9 +188,13 @@ myTripartite <-
     
     # The double mutualists
     # Calculate the adjusted length for the vector
-    adjLenPropMiddle <- maxXlim - (length(propMiddle) * 0.05)
+    adjLenPropMiddle <- maxXlim - (length(prop_doubleMutCounted) * 0.05)
     # Standardize
-    standPropMiddle <- pred_propCaught * adjLenPropMiddle
+    standPropMiddle <- propMiddle / sum(prop_doubleMutCounted)  * adjLenPropMiddle
+    
+    # Another standardized middle layer (i.e. double mutualist layer) is using
+    # the proportions of counted individuals
+    standPropMiddleCounted <- prop_doubleMutCounted / sum(prop_doubleMutCounted) * adjLenPropMiddle
     
     # Initialize positions and offsets for predators and prey in the plot later
     pred_x <- 0
@@ -195,7 +219,7 @@ myTripartite <-
       rownames(web) <- substr(rownames(web), 1, lablength)
     
     # Initiate plotting process
-    par(mai = c(0.3, 0.1, 0.3, 0.1))
+    par(mai = c(0.1, 0.01, 0.1, 0.01))
     
     # Define plot boundaries
     wleft <- 0
@@ -203,8 +227,8 @@ myTripartite <-
     #(max(n.pred, length(colnames(web2)), n.prey, length(rownames(web2)))) * 
     #  min(prey_spacing, pred_spacing) + 
     #  1 + max(sum(diffh), sum(difff))
-    wup <- 1.5 + y_width + lab.space * 0.05
-    wdown <- 0.5 - y_width - lab.space * 0.05
+    wup <- 2.6 + y_width + lab.space * 0.05
+    wdown <- 0.4 - y_width - lab.space * 0.05
     
     # Create the plot area
     plot(0, type = "n", xlim = c(wleft, wright), #range(wleft, wright), 
@@ -232,10 +256,10 @@ myTripartite <-
       
       # Draw predator species box if pred_prop is greater than 0
       rect(pred_x, pred_y - y_width, 
-           pred_x + standPropMiddle[i],
+           pred_x + standPropMiddleCounted[i],
            pred_y,
            col=ifelse(colSums(web)[i] > 0, col.middle[i], "transparent"),
-           border=ifelse(colSums(web)[i] > 0, col.border.middle[i], "transparent")) # take out "+ y_width", to plot the predators only half as high
+           border=ifelse(colSums(web)[i] > 0, "black", "transparent"), lwd=1.2) # take out "+ y_width", to plot the predators only half as high
       
       # We then plot a transparent box for the lower web
       #rect(pred_x, pred_y - y_width, pred_x + prey_prop_temp[i], 
@@ -243,20 +267,20 @@ myTripartite <-
       #}
       
       breite <- strwidth(colnames(web)[i], cex = 0.6 * labsize)
-      links <- pred_x + standPropMiddle[i] / 2 - breite / 2
+      links <- pred_x + standPropMiddleCounted[i] / 2 - breite / 2
       
       # Adjust text offset if labels overlap
       if (links < rechts && i > 1) 
         hoffset <- hoffset + hoehe
       else {
-        rechts <- pred_x + standPropMiddle[i] / 2 + breite / 2
+        rechts <- pred_x + standPropMiddleCounted[i] / 2 + breite / 2
         hoffset <- 0
       }
       
       # Move to the next position for the next box
       # If a "middle" species is not present in the lower web, we should instead use
       # it's abundance in the higher web
-      pred_x <- pred_x + standPropMiddle[i] + 
+      pred_x <- pred_x + standPropMiddleCounted[i] + 
         0.05
       
     }
@@ -328,15 +352,24 @@ myTripartite <-
     # To account for the standardized scale, we will thus add the percentual change
     # In this step we need to apply the conversion to the doublemutualists in web1
     # We will calculate this case by case, as some species may not be in web1
-    percentDoubleMutWeb1 <- numeric(length(pred_prop))
+    percentDoubleMutWeb <- numeric(length(pred_prop))
+    
     for (i in seq_along(pred_prop)) {
       if (pred_prop[i] > 0) {
-        percentDoubleMutWeb1[i] <- (standPropMiddle[i] - pred_prop[i]) / pred_prop[i]
+        percentDoubleMutWeb[i] <- (standPropMiddleCounted[i] - pred_prop[i]) / pred_prop[i]
       } else {
-        percentDoubleMutWeb1[i] <- 0
+        percentDoubleMutWeb[i] <- 0
       }
     }
-    # Conversion for the interaction partners of the double mutualists in web1
+    names(percentDoubleMutWeb) <- names(pred_prop)
+    
+    # Now what we actually plot in web 1
+    #percentDoubleMutWeb1Plot <- numeric(length(percentDoubleMutWeb))
+    #for (i in seq_along(percentDoubleMutWeb)) {
+    #  percentDoubleMutWeb1Plot[i] <- (pollenPercent[i]/1) * percentDoubleMutWeb[i]
+    #}
+    
+    # Conversion for the interaction partners of the double mutualists in web
     percentIntPartWeb1 <- (sum(standPropIntPartWeb1) - sum(prey_prop)) / sum(prey_prop)
     
     # now find the respective x coordinates
@@ -355,11 +388,11 @@ myTripartite <-
         
         # Adjust x1 based on the cumulative sum for each j within i
         if (i > 1) {
-          x1 <- middle_x_values[j] + (sum(web[1:(i - 1), j]) / sum(web) +
-            ((sum(web[1:(i - 1), j]) / sum(web)) * percentDoubleMutWeb1[j]))*seedPercent[j]
+          x1 <- middle_x_values[j] + ((sum(web[1:(i - 1), j]) / sum(web) +
+                                        ((sum(web[1:(i - 1), j]) / sum(web)) * percentDoubleMutWeb[j]))) * pollenPercent[j]
         }
         
-        x2 <- x1 + (web[i, j] / sum(web) + ((web[i, j] / sum(web)) * percentDoubleMutWeb1[j]))*seedPercent[j]
+        x2 <- x1 + ((web[i, j] / sum(web) + ((web[i, j] / sum(web)) * percentDoubleMutWeb[j]))) * pollenPercent[j]
         
         if (arrow == "up" || arrow == "both") {
           x2 <- (x1 + x2) / 2
@@ -367,13 +400,13 @@ myTripartite <-
         }
         
         tweb <- t(web)
-      
+        
         # Reset x3 for each new i
         x3 <- xPositionIntPartWeb1[i]
-          
+        
         if (j > 1)
           x3 <- xPositionIntPartWeb1[i] + sum(tweb[1:(j - 1), i]) / sum(web) + ((sum(tweb[1:(j - 1), i]) / sum(web)) * percentIntPartWeb1)
-       # if (!is.null(low.abun) && i > 1) 
+        # if (!is.null(low.abun) && i > 1) 
         #  x3 <- x3 + cumsum(difff)[i - 1] + ((cumsum(difff)[i - 1]) * percentIntPartWeb1) 
         x4 <- x3 + tweb[j, i] / sum(web) + ((tweb[j, i] / sum(web)) * percentIntPartWeb1) 
         
@@ -457,7 +490,7 @@ myTripartite <-
       colnames(web2) <- substr(colnames(web2), 1, lablength2)
     if (!is.null(lablength2)) 
       rownames(web2) <- substr(rownames(web2), 1, lablength2)
-  
+    
     pred_x = 0
     hoffset <- 0
     links <- 0
@@ -518,16 +551,16 @@ myTripartite <-
       if (rowSums(web2)[i] > 0) { # Here I use rowSums(web2) to test if a middle species is present in the second web
         if (prey_prop[i] > 0) {
           rect(middle_x_values[i], prey_y - y_width, 
-               middle_x_values[i] + standPropMiddle[i], 
-               prey_y + y_width, col=col.middle2[i], border=col.border.middle2)
+               middle_x_values[i] + standPropMiddleCounted[i], 
+               prey_y + y_width, col=col.middle2[i], border="black", lwd=1.2)
         }
       } 
       
       if (!is.null(low.abun2)) {
         if (prey_prop[i] == 0 ) {
-          rect(middle_x_values[i] + standPropMiddle[i], prey_y, 
+          rect(middle_x_values[i] + standPropMiddleCounted[i], prey_y, 
                middle_x_values[i], prey_y + y_width,
-               col=col.middle2[i])
+               col=col.middle2[i], lwd=1.2)
         }
       }
       
@@ -538,11 +571,11 @@ myTripartite <-
         hoffset = hoffset + hoehe
       
       else {
-        rechts <- prey_x + standPropMiddle[i]/2 + breite/2
+        rechts <- prey_x + standPropMiddleCounted[i]/2 + breite/2
         hoffset <- hoehe
       }
       
-      text(middle_x_values[i] + standPropMiddle[i]/2, prey_y, 
+      text(middle_x_values[i] + standPropMiddleCounted[i]/2, prey_y, 
            rownames(web2)[i], cex = 0.6 * labsize, offset = 0,
            col=col.text.doubleMutualist)
       
@@ -567,24 +600,16 @@ myTripartite <-
     
     # We will need to factor in the fact, that we have standardized proportions and thus, things have slightly changed.
     # To account for the standardized scale, we will thus add the percentual change
-    # Conversion for the double mutualists in web2. Again, we calculate case by cas, as not all species are present in web2
-    percentDoubleMutWeb2 <- numeric(length(propDoubleMutWeb2))
-    for (i in seq_along(propDoubleMutWeb2)) {
-      if (propDoubleMutWeb2[i] == propMiddle[i]) {
-        if (propDoubleMutWeb2[i] > 0) {
-            percentDoubleMutWeb2[i] <- (standPropMiddle[i] - propDoubleMutWeb2[i]) / propDoubleMutWeb2[i]
-        } else { percentDoubleMutWeb2[i] <- 0 }
-      }
-      else { 
-        if (propDoubleMutWeb2[i] > 0 && propDoubleMutWeb2[i] < propMiddle[i]) {
-          percentDoubleMutWeb2[i] <- (standPropMiddle[i] - propDoubleMutWeb2[i]) / propDoubleMutWeb2[i]
-        }
-        else { percentDoubleMutWeb2[i] <- 0 }
-      }
-    } 
+    # Conversion for the double mutualists in web2. Again, we calculate case by case, as not all species are present in web2
+    # Now what we actually plot in web 1
+    percentDoubleMutWeb2Plot <- numeric(length(percentDoubleMutWeb))
+    for (i in seq_along(percentDoubleMutWeb)) {
+      percentDoubleMutWeb2Plot[i] <- percentDoubleMutWeb2Plot[i] - (1-seedPercent[i])
+    }
+    
     # Conversion for the interaction partners of the double mutualists in web2
     percentIntPartWeb2 <- (sum(standPropIntPartWeb2) - sum(propIntPartWeb2)) / sum(propIntPartWeb2)
-  
+    
     # Let's plot the interactions between species now
     if (sum(web2 > 0)) {
       
@@ -601,7 +626,7 @@ myTripartite <-
             ((sum(web2[1:(i - 1), j]) / sum(web2)) * percentIntPartWeb2)
         }
         
-        x2 <- x1 + web2[i, j] / sum(web2) + ((web2[i, j] / sum(web2)) * percentIntPartWeb2)
+        x2 <- x1 + web2[i, j] / sum(web2) + ((web2[i, j] / sum(web2)) * percentIntPartWeb2) 
         
         if (arrow == "up" || arrow == "both") {
           x2 <- (x1 + x2) / 2
@@ -615,11 +640,11 @@ myTripartite <-
         
         # Adjust x3 based on the cumulative sum for each j within i
         if (j > 1) {
-          x3 <- middle_x_values[i] + sum(tweb[1:(j - 1), i]) / websum +
-            ((sum(tweb[1:(j - 1), i]) / websum) * ifelse(percentDoubleMutWeb2[i] !=0, (1 + percentDoubleMutWeb2[i]), percentDoubleMutWeb2[i]))
+          x3 <- middle_x_values[i] + ((sum(tweb[1:(j - 1), i]) / websum + ((sum(tweb[1:(j - 1), i]) / websum) * percentDoubleMutWeb[i]))) * seedPercent[i]
+           # ((sum(tweb[1:(j - 1), i]) / websum) * ifelse(percentDoubleMutWeb2[i] !=0, (1 + percentDoubleMutWeb2[i]), percentDoubleMutWeb2[i]))
         }
         
-        x4 <- x3 + tweb[j, i] / websum + ((tweb[j, i] / websum) * ifelse(percentDoubleMutWeb2[i] !=0, (1 + percentDoubleMutWeb2[i]), percentDoubleMutWeb2[i]))
+        x4 <- x3 + ((tweb[j, i] / websum + ((tweb[j, i] / websum) * percentDoubleMutWeb[i]))) * seedPercent[i] #+ ((tweb[j, i] / websum) * ifelse(percentDoubleMutWeb2[i] !=0, (1 + percentDoubleMutWeb2[i]), percentDoubleMutWeb2[i]))
         
         if (arrow2 == "down" || arrow2 == "both") {
           x4 <- (x3 + x4) / 2
