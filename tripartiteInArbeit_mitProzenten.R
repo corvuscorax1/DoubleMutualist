@@ -406,8 +406,7 @@ doubleMutualist <-
         
         if (j > 1)
           x3 <- xPositionIntPartWeb1[i] + sum(tweb[1:(j - 1), i]) / sum(web) + ((sum(tweb[1:(j - 1), i]) / sum(web)) * percentIntPartWeb1)
-        # if (!is.null(low.abun) && i > 1) 
-        #  x3 <- x3 + cumsum(difff)[i - 1] + ((cumsum(difff)[i - 1]) * percentIntPartWeb1) 
+
         x4 <- x3 + tweb[j, i] / sum(web) + ((tweb[j, i] / sum(web)) * percentIntPartWeb1) 
         
         if (arrow == "down" || arrow == "both") {
@@ -602,10 +601,16 @@ doubleMutualist <-
     # To account for the standardized scale, we will thus add the percentual change
     # Conversion for the double mutualists in web2. Again, we calculate case by case, as not all species are present in web2
     # Now what we actually plot in web 1
-    percentDoubleMutWeb2Plot <- numeric(length(percentDoubleMutWeb))
-    for (i in seq_along(percentDoubleMutWeb)) {
-      percentDoubleMutWeb2Plot[i] <- percentDoubleMutWeb2Plot[i] - (1-seedPercent[i])
+    percentDoubleMutWeb2 <- numeric(length(propDoubleMutWeb2))
+    
+    for (i in seq_along(propDoubleMutWeb2)) {
+      if (propDoubleMutWeb2[i] > 0) {
+        percentDoubleMutWeb2[i] <- (standPropMiddleCounted[i] - propDoubleMutWeb2[i]) / propDoubleMutWeb2[i]
+      } else {
+        percentDoubleMutWeb2[i] <- 0
+      }
     }
+    names(percentDoubleMutWeb2) <- names(propDoubleMutWeb2)
     
     # Conversion for the interaction partners of the double mutualists in web2
     percentIntPartWeb2 <- (sum(standPropIntPartWeb2) - sum(propIntPartWeb2)) / sum(propIntPartWeb2)
@@ -640,11 +645,12 @@ doubleMutualist <-
         
         # Adjust x3 based on the cumulative sum for each j within i
         if (j > 1) {
-          x3 <- middle_x_values[i] + ((sum(tweb[1:(j - 1), i]) / websum + ((sum(tweb[1:(j - 1), i]) / websum) * percentDoubleMutWeb[i]))) * seedPercent[i]
-           # ((sum(tweb[1:(j - 1), i]) / websum) * ifelse(percentDoubleMutWeb2[i] !=0, (1 + percentDoubleMutWeb2[i]), percentDoubleMutWeb2[i]))
+          x3 <- middle_x_values[i] + ((sum(tweb[1:(j - 1), i]) / sum(tweb) +
+                                         ((sum(tweb[1:(j - 1), i]) / sum(tweb)) * percentDoubleMutWeb2[i])))  * seedPercent[i]
         }
         
-        x4 <- x3 + ((tweb[j, i] / websum + ((tweb[j, i] / websum) * percentDoubleMutWeb[i]))) * seedPercent[i] #+ ((tweb[j, i] / websum) * ifelse(percentDoubleMutWeb2[i] !=0, (1 + percentDoubleMutWeb2[i]), percentDoubleMutWeb2[i]))
+        x4 <- x3 + ((tweb[j, i] / sum(tweb) + 
+                       ((tweb[j, i] / sum(tweb)) * percentDoubleMutWeb2[i]))) * seedPercent[i] 
         
         if (arrow2 == "down" || arrow2 == "both") {
           x4 <- (x3 + x4) / 2
