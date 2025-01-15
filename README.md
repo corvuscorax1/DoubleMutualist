@@ -1,6 +1,6 @@
 A function to plot double mutualistic interactions in a simple and comprehensive manner.
 Double mutualists (e.g. birds) will be plotted in the middle, and their interactions
-will be plotted below and above similarly to the plotweb() function. 
+will be plotted below and above similarly to the plotweb2() function from the [bipartite](https://journal.r-project.org/articles/RN-2008-010/) R package. 
 
 To include more detail, we plot abundance of the double mutualists based on their observed 
 numbers (e.g. number of caught individuals) and we plot their interactions based on percentages.
