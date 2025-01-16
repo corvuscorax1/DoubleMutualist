@@ -210,9 +210,9 @@ doubleMutualist <-
     
     # Ensure column and row names are not NULL
     if (length(colnames(web)) == 0) 
-      colnames(web) <- colnames(web, do.NULL = FALSE)
+      colnames(web) <- colnames(web, do.NULL=FALSE)
     if (length(rownames(web)) == 0) 
-      rownames(web) <- rownames(web, do.NULL = FALSE)
+      rownames(web) <- rownames(web, do.NULL=FALSE)
     
     # Truncate labels if lablength is specified
     if (!is.null(lablength)) 
@@ -234,7 +234,7 @@ doubleMutualist <-
     
     # Create the plot area
     plot(0, type = "n", xlim = c(wleft, wright), # range(wleft, wright), 
-         ylim = range(wdown / ybig, wup * ybig), axes = FALSE, 
+         ylim = range(wdown / ybig, wup * ybig), axes=FALSE, 
          xlab = "", ylab = "")
     
     # Initialize positions for predator boxes
@@ -242,7 +242,7 @@ doubleMutualist <-
     hoffset <- 0
     links <- 0
     rechts <- 0
-    hoehe <- strheight(colnames(web)[1], cex = 0.6)
+    hoehe <- strheight(colnames(web)[1], cex=0.6)
     
     # Create a vector to save the starting positions of each middle species
     # Initialize an empty vector to save pred_x values
@@ -269,7 +269,7 @@ doubleMutualist <-
       #     pred_y, col="transparent", border="blue") 
       #}
       
-      breite <- strwidth(colnames(web)[i], cex = 0.6 * labsize)
+      breite <- strwidth(colnames(web)[i], cex=0.6 * labsize)
       links <- pred_x + standPropMiddleCounted[i] / 2 - breite / 2
       
       # Adjust text offset if labels overlap
@@ -292,7 +292,7 @@ doubleMutualist <-
     prey_x <- 0
     links <- 0
     rechts <- 0
-    hoehe <- strheight(rownames(web)[1], cex = 0.6)
+    hoehe <- strheight(rownames(web)[1], cex=0.6)
     hoffset <- hoehe
     
     # Initialize a vector that will save the starting x coordinates of the interaction
@@ -307,9 +307,9 @@ doubleMutualist <-
       
       # Draw prey species box
       rect(prey_x, prey_y - y_width, prey_x + standPropIntPartWeb1[i], 
-           prey_y + y_width, col = col.prey)
+           prey_y + y_width, col=col.prey)
       
-      breite <- strwidth(rownames(web)[i], cex = 0.6 * labsize)
+      breite <- strwidth(rownames(web)[i], cex=0.6 * labsize)
       links <- prey_x + standPropIntPartWeb1[i] / 2 - breite / 2
       
       # Adjust text offset if labels overlap
@@ -322,7 +322,7 @@ doubleMutualist <-
       
       # Plot prey species names
       text(prey_x + standPropIntPartWeb1[i] / 2, prey_y - y_width - hoffset, 
-           rownames(web)[i], cex = 0.6 * labsize, offset = 0,
+           rownames(web)[i], cex=0.6 * labsize, offset=0,
            col=col.text.low)
       
       # calculate the next x position for the next box
@@ -337,11 +337,11 @@ doubleMutualist <-
     # Initialize interaction plotting variables
     pred_x <- 0
     zwischenweb <- web
-    XYcoords <- matrix(ncol = 2, nrow = length(zwischenweb))
+    XYcoords <- matrix(ncol=2, nrow=length(zwischenweb))
     
     # Determine the coordinates of interactions
     for (i in 1:length(zwischenweb)) {
-      XYcoords[i, ] <- which(zwischenweb == max(zwischenweb), arr.ind = TRUE)[1, ]
+      XYcoords[i, ] <- which(zwischenweb == max(zwischenweb), arr.ind=TRUE)[1, ]
       zwischenweb[XYcoords[i, 1], XYcoords[i, 2]] <- -1
     }
     
@@ -423,8 +423,8 @@ doubleMutualist <-
         
         # Draw the polygon representing the interaction
         polygon(c(x1, x2, x4, x3), c(y1, y2, y4, y3), 
-                col = col.interaction1[j],
-                border = NA)
+                col=col.interaction1[j],
+                border=NA)
       }
       
     }
@@ -437,7 +437,7 @@ doubleMutualist <-
     for (i in 1:dim(web)[2]) {
       dn <- dimnames(web)[[2]][i]
       if (is.na(match(dn, dimnames(web2)[[1]]))) {
-        dummy <- matrix(rep(0, dim(web2)[2]), nrow = 1)
+        dummy <- matrix(rep(0, dim(web2)[2]), nrow=1)
         rownames(dummy) <- dn
         web2 <- rbind(web2, dummy)
       }
@@ -447,7 +447,7 @@ doubleMutualist <-
     web2 <- web2[rank(dimnames(web)[[2]]), ]
     difff <- diffh <- 0
     dummy <- colSums(web)
-    lowfreq = rowSums(web2)
+    lowfreq <- rowSums(web2)
     for (i in 1:length(dummy)) {
       dummy[i] <- dummy[i] - lowfreq[which(names(lowfreq) == 
                                              names(dummy[i]))]
@@ -456,17 +456,17 @@ doubleMutualist <-
     # Use the lower matrix, to calculate the positions for the middle species in the 
     # upper matrix
     low.abun2 <- dummy
-    lowfreq = lowfreq + low.abun2 # 
-    difff = low.abun2/websum
+    lowfreq <- lowfreq + low.abun2 # 
+    difff <- low.abun2/websum
     
     if (!is.null(high.abun2)) {
-      highfreq = colSums(web2)
+      highfreq <- colSums(web2)
       dummy <- highfreq
       for (i in 1:length(high.abun2)) {
         ind <- which(names(high.abun2)[i] == names(dummy))
         highfreq[ind] <- highfreq[ind] + high.abun2[i]
       }
-      diffh = (highfreq - colSums(web2))/websum
+      diffh <- (highfreq - colSums(web2))/websum
     }
     
     if (is.null(high.abun2)) 
@@ -497,11 +497,11 @@ doubleMutualist <-
     if (!is.null(lablength2)) 
       rownames(web2) <- substr(rownames(web2), 1, lablength2)
     
-    pred_x = 0
+    pred_x <- 0
     hoffset <- 0
     links <- 0
     rechts <- 0
-    hoehe <- strheight(colnames(web2)[1], cex = 0.6)
+    hoehe <- strheight(colnames(web2)[1], cex=0.6)
     
     # Initialize a vector that stores the new x positions of the interaction partners
     # of the doublemutualists in the second web
@@ -523,7 +523,7 @@ doubleMutualist <-
       #       pred_x + pred_prop[i], pred_y + y_width, col = high.abun.col2)
       #}
       
-      breite <- strwidth(colnames(web2)[i], cex = 0.6 * labsize)
+      breite <- strwidth(colnames(web2)[i], cex=0.6 * labsize)
       links <- pred_x + standPropIntPartWeb2[i]/2 - breite/2
       
       if (links < rechts && i > 1) 
@@ -535,8 +535,8 @@ doubleMutualist <-
       }
       
       text(pred_x + standPropIntPartWeb2[i]/2, pred_y + y_width + hoehe + 
-             hoffset, colnames(web2)[i], cex = 0.6 * labsize, 
-           offset = 0, col=col.text.high)
+             hoffset, colnames(web2)[i], cex=0.6 * labsize, 
+           offset=0, col=col.text.high)
       
       pred_x <- pred_x + standPropIntPartWeb2[i] + 0.05
       
@@ -546,7 +546,7 @@ doubleMutualist <-
     prey_x <- 0
     links <- 0
     rechts <- 0
-    hoehe <- strheight(rownames(web2)[1], cex = 0.6)
+    hoehe <- strheight(rownames(web2)[1], cex=0.6)
     hoffset <- hoehe
     
     # Now we plot the middle layer of the tripartite network from the perspective of the
@@ -571,7 +571,7 @@ doubleMutualist <-
         }
       }
       
-      breite <- strwidth(rownames(web)[i], cex = 0.6 * labsize)
+      breite <- strwidth(rownames(web)[i], cex=0.6 * labsize)
       links <- prey_x + prey_prop[i]/2 - breite/2
       
       if (links < rechts && i > 1) 
@@ -583,7 +583,7 @@ doubleMutualist <-
       }
       
       text(middle_x_values[i] + standPropMiddleCounted[i]/2, prey_y, 
-           rownames(web2)[i], cex = 0.6 * labsize, offset = 0,
+           rownames(web2)[i], cex=0.6 * labsize, offset=0,
            col=col.text.doubleMutualist)
       
     }
@@ -593,7 +593,7 @@ doubleMutualist <-
     ############################
     pred_x <- 0
     zwischenweb <- web2
-    XYcoords <- matrix(ncol = 2, nrow = length(zwischenweb))
+    XYcoords <- matrix(ncol=2, nrow=length(zwischenweb))
     for (i in 1:length(zwischenweb)) {
       XYcoords[i, ] <- which(zwischenweb == max(zwischenweb), 
                              arr.ind = TRUE)[1, ]
@@ -671,8 +671,8 @@ doubleMutualist <-
         
         # Draw the polygons
         polygon(c(x1, x2, x4, x3), c(y1, y2, y4, y3), 
-                col = col.interaction2[i],
-                border = NA)
+                col=col.interaction2[i],
+                border=NA)
       }
       
     }
