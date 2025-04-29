@@ -7,4 +7,4 @@ numbers (e.g. number of caught individuals) and we plot their interactions based
 For instance, if only 10% of the individuals participated in one of the ecosystem functions,
 but 50% participated in the other function, this will be very easy to see.
 
-Double mutualistic interaction network from the island of Trinidad. Birds (in the center) act as seed dispersers (plants at the bottom) and pollen dispersers (plants on top). ![Fig 1](https://github.com/corvuscorax1/Tripartite/blob/main/img/doubleMutualist_Trinidad.png).
+Double mutualistic interaction network from the island of Trinidad. Birds (in the center) act as seed dispersers (plants on top) and pollen dispersers (plants at the bottom). ![Fig 1](https://github.com/corvuscorax1/Tripartite/blob/main/img/doubleMutualist_Trinidad.png).
