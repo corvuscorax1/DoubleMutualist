@@ -29,7 +29,7 @@ doubleMutualist <-
     
     # Colorsettings for the doublemutualists
     col.doubleMutualist="grey10",  col.doubleMutualist2="grey10", 
-    col.border.middle="grey10", col.border.middle2="grey10",
+    col.border.doubleMutualist="grey10", col.border.doubleMutualist2="grey10",
     
     # Colorsettings for species the doublemutualists interact with (lower and upper web)
     col.prey="grey90", col.pred2="grey85",
@@ -249,7 +249,7 @@ doubleMutualist <-
            pred_y,
            col=ifelse(colSums(web)[i] > 0 & rowSums(web2)[i] == 0, col.doubleMutualist[i], "transparent"),
            border=ifelse(colSums(web)[i] > 0 & rowSums(web2)[i] == 0, 
-                         col.border.middle[i], "transparent"), lwd=1.2) # take out "+ y_width", to plot the predators only half as high
+                         col.border.doubleMutualist[i], "transparent"), lwd=1.2) # take out "+ y_width", to plot the predators only half as high
 
       breite <- strwidth(colnames(web)[i], cex = 0.6 * labsize)
       links <- pred_x + standPropMiddleCounted[i] / 2 - breite / 2
@@ -438,7 +438,7 @@ doubleMutualist <-
            pred_y,
            col="transparent",
            border=ifelse(colSums(web)[i] > 0 & rowSums(web2)[i] == 0, 
-                         col.border.middle[i], "transparent"), lwd=1.2) # take out "+ y_width", to plot the predators only half as high
+                         col.border.doubleMutualist[i], "transparent"), lwd=1.2) # take out "+ y_width", to plot the predators only half as high
       
       breite <- strwidth(colnames(web)[i], cex = 0.6 * labsize)
       links <- pred_x + standPropMiddleCounted[i] / 2 - breite / 2
@@ -627,7 +627,7 @@ doubleMutualist <-
           rect(middle_x_values[i], prey_y - y_width, 
                middle_x_values[i] + standPropMiddleCounted[i], 
                prey_y + y_width, col=col.doubleMutualist2[i], 
-               border=col.border.middle2[i], 
+               border=col.border.doubleMutualist2[i], 
                lwd=1.2)
         }
       } 
@@ -636,7 +636,7 @@ doubleMutualist <-
         if (prey_prop[i] == 0 ) {
           rect(middle_x_values[i] + standPropMiddleCounted[i], prey_y, 
                middle_x_values[i], prey_y + y_width,
-               col=col.doubleMutualist2[i], border=col.border.middle2[i], 
+               col=col.doubleMutualist2[i], border=col.border.doubleMutualist2[i], 
                lwd=1.2)
         }
       }
@@ -804,7 +804,7 @@ doubleMutualist <-
           rect(middle_x_values[i], prey_y - y_width, 
                middle_x_values[i] + standPropMiddleCounted[i], 
                prey_y + y_width, 
-               col="transparent", border=col.border.middle2[i], 
+               col="transparent", border=col.border.doubleMutualist2[i], 
                lwd=1.2)
         }
       } 
@@ -813,7 +813,7 @@ doubleMutualist <-
         if (prey_prop[i] == 0 ) {
           rect(middle_x_values[i] + standPropMiddleCounted[i], prey_y, 
                middle_x_values[i], prey_y + y_width,
-               col="transparent", border=col.border.middle2[i], 
+               col="transparent", border=col.border.doubleMutualist2[i], 
                lwd=1.2)
         }
       }
