@@ -8,7 +8,7 @@ doubleMutualist <-
   
   function (
 
-    web, web2, 
+    web, web2, # two interaction matrices, one species group (double mutualist needs to be shared between matrices)
     method="cca", method2="cca",
     empty=FALSE, empty2=TRUE, 
     
@@ -23,16 +23,12 @@ doubleMutualist <-
     lablength=NULL, lablength2=NULL, 
     sequence=NULL, sequence.pred2=NULL,
      
-    # For col.middle, col.middle2, col.interaction and col.interaction2, we will 
-    # be able to pass a customized vector of colors, 
-    # to color different species depending on how we want them to look.
-    # E.g. we can color all species of a specific genus a certain color etc.
-    
+    # Define default colors. Can be customized to highlight e.g. different species
     # Colorsettings for interactions between species (in lower and upper web)
     col.interaction1="grey80", col.interaction2="grey80",
     
     # Colorsettings for the doublemutualists
-    col.middle="grey10",  col.middle2="grey10", 
+    col.doubleMutualist="grey10",  col.doubleMutualist2="grey10", 
     col.border.middle="grey10", col.border.middle2="grey10",
     
     # Colorsettings for species the doublemutualists interact with (lower and upper web)
@@ -251,7 +247,7 @@ doubleMutualist <-
       rect(pred_x, pred_y - y_width, 
            pred_x + standPropMiddleCounted[i],
            pred_y,
-           col=ifelse(colSums(web)[i] > 0 & rowSums(web2)[i] == 0, col.middle[i], "transparent"),
+           col=ifelse(colSums(web)[i] > 0 & rowSums(web2)[i] == 0, col.doubleMutualist[i], "transparent"),
            border=ifelse(colSums(web)[i] > 0 & rowSums(web2)[i] == 0, 
                          col.border.middle[i], "transparent"), lwd=1.2) # take out "+ y_width", to plot the predators only half as high
 
@@ -630,7 +626,7 @@ doubleMutualist <-
         if (prey_prop[i] > 0) {
           rect(middle_x_values[i], prey_y - y_width, 
                middle_x_values[i] + standPropMiddleCounted[i], 
-               prey_y + y_width, col=col.middle2[i], 
+               prey_y + y_width, col=col.doubleMutualist2[i], 
                border=col.border.middle2[i], 
                lwd=1.2)
         }
@@ -640,7 +636,7 @@ doubleMutualist <-
         if (prey_prop[i] == 0 ) {
           rect(middle_x_values[i] + standPropMiddleCounted[i], prey_y, 
                middle_x_values[i], prey_y + y_width,
-               col=col.middle2[i], border=col.border.middle2[i], 
+               col=col.doubleMutualist2[i], border=col.border.middle2[i], 
                lwd=1.2)
         }
       }
