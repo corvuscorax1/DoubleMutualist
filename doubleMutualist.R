@@ -9,7 +9,7 @@ doubleMutualist <-
   function (
 
     web, web2, # two interaction matrices, one species group (double mutualist needs to be shared between matrices)
-    method="cca", method2="cca",
+    method="cca", method2="cca", # default plotting method for web and web2 (see plotweb())
     empty=FALSE, empty2=TRUE, 
     
     labsize=1, lab.space=1, 
@@ -33,7 +33,7 @@ doubleMutualist <-
     
     # Colorsettings for species the doublemutualists interact with (lower and upper web)
     col.intPartner="grey90", col.intPartner2="grey85",
-    col.border.prey="grey10", col.border.pred2="grey10",
+    col.border.intPartner="grey10", col.border.intPartner2="grey10",
     
     # Colorsettings for the labels
     col.text.low="black", col.text.high="black",
@@ -229,8 +229,8 @@ doubleMutualist <-
     # Initialize positions for predator boxes
     pred_x <- 0
     hoffset <- 0
-    links <- 0
-    rechts <- 0
+    left <- 0
+    right <- 0
     hoehe <- strheight(colnames(web)[1], cex = 0.6)
     
     # Create a vector to save the starting positions of each middle species
@@ -252,13 +252,13 @@ doubleMutualist <-
                          col.border.doubleMutualist[i], "transparent"), lwd=1.2) # take out "+ y_width", to plot the predators only half as high
 
       breite <- strwidth(colnames(web)[i], cex = 0.6 * labsize)
-      links <- pred_x + standPropMiddleCounted[i] / 2 - breite / 2
+      left <- pred_x + standPropMiddleCounted[i] / 2 - breite / 2
       
       # Adjust text offset if labels overlap
-      if (links < rechts && i > 1) 
+      if (left < right && i > 1) 
         hoffset <- hoffset + hoehe
       else {
-        rechts <- pred_x + standPropMiddleCounted[i] / 2 + breite / 2
+        right <- pred_x + standPropMiddleCounted[i] / 2 + breite / 2
         hoffset <- 0
       }
       
@@ -271,8 +271,8 @@ doubleMutualist <-
     
     # Initialize positions for prey boxes
     prey_x <- 0
-    links <- 0
-    rechts <- 0
+    left <- 0
+    right <- 0
     hoehe <- strheight(rownames(web)[1], cex = 0.6)
     hoffset <- hoehe
     
@@ -288,17 +288,17 @@ doubleMutualist <-
       
       # Draw prey species box
       rect(prey_x, prey_y - y_width, prey_x + standPropIntPartWeb1[i], 
-           prey_y + y_width, col = col.intPartner[i], border=col.border.prey[i], 
+           prey_y + y_width, col = col.intPartner[i], border=col.border.intPartner[i], 
            lwd=1.2)
       
       breite <- strwidth(rownames(web)[i], cex = 0.6 * labsize)
-      links <- prey_x + standPropIntPartWeb1[i] / 2 - breite / 2
+      left <- prey_x + standPropIntPartWeb1[i] / 2 - breite / 2
       
       # Adjust text offset if labels overlap
-      if (links < rechts && i > 1) 
+      if (left < right && i > 1) 
         hoffset <- hoffset + hoehe
       else {
-        rechts <- prey_x + standPropIntPartWeb1[i] / 2 + breite / 2
+        right <- prey_x + standPropIntPartWeb1[i] / 2 + breite / 2
         hoffset <- hoehe
       }
       
@@ -408,17 +408,14 @@ doubleMutualist <-
     # Define plot boundaries
     wleft <- 0
     wright <- 1 + (max(nrow(web), ncol(web), ncol(web2), nrow(web2))) * 0.05
-    #(max(n.pred, length(colnames(web2)), n.prey, length(rownames(web2)))) * 
-    #  min(prey_spacing, pred_spacing) + 
-    #  1 + max(sum(diffh), sum(difff))
     wup <- 2.6 + y_width + lab.space * 0.05
     wdown <- 0.4 - y_width - lab.space * 0.05
     
     # Initialize positions for predator boxes
     pred_x <- 0
     hoffset <- 0
-    links <- 0
-    rechts <- 0
+    left <- 0
+    right <- 0
     hoehe <- strheight(colnames(web)[1], cex = 0.6)
     
     # Create a vector to save the starting positions of each middle species
@@ -441,13 +438,13 @@ doubleMutualist <-
                          col.border.doubleMutualist[i], "transparent"), lwd=1.2) # take out "+ y_width", to plot the predators only half as high
       
       breite <- strwidth(colnames(web)[i], cex = 0.6 * labsize)
-      links <- pred_x + standPropMiddleCounted[i] / 2 - breite / 2
+      left <- pred_x + standPropMiddleCounted[i] / 2 - breite / 2
       
       # Adjust text offset if labels overlap
-      if (links < rechts && i > 1) 
+      if (left < right && i > 1) 
         hoffset <- hoffset + hoehe
       else {
-        rechts <- pred_x + standPropMiddleCounted[i] / 2 + breite / 2
+        right <- pred_x + standPropMiddleCounted[i] / 2 + breite / 2
         hoffset <- 0
       }
       
@@ -461,8 +458,8 @@ doubleMutualist <-
     
     # Initialize positions for prey boxes
     prey_x <- 0
-    links <- 0
-    rechts <- 0
+    left <- 0
+    right <- 0
     hoehe <- strheight(rownames(web)[1], cex = 0.6)
     hoffset <- hoehe
     
@@ -478,17 +475,17 @@ doubleMutualist <-
       
       # Draw prey species box
       rect(prey_x, prey_y - y_width, prey_x + standPropIntPartWeb1[i], 
-           prey_y + y_width, col="transparent", border=col.border.prey[i], 
+           prey_y + y_width, col="transparent", border=col.border.intPartner[i], 
            lwd=1.2)
       
       breite <- strwidth(rownames(web)[i], cex = 0.6 * labsize)
-      links <- prey_x + standPropIntPartWeb1[i] / 2 - breite / 2
+      left <- prey_x + standPropIntPartWeb1[i] / 2 - breite / 2
       
       # Adjust text offset if labels overlap
-      if (links < rechts && i > 1) 
+      if (left < right && i > 1) 
         hoffset <- hoffset + hoehe
       else {
-        rechts <- prey_x + standPropIntPartWeb1[i] / 2 + breite / 2
+        right <- prey_x + standPropIntPartWeb1[i] / 2 + breite / 2
         hoffset <- hoehe
       }
       
@@ -572,8 +569,8 @@ doubleMutualist <-
     
     pred_x = 0
     hoffset <- 0
-    links <- 0
-    rechts <- 0
+    left <- 0
+    right <- 0
     hoehe <- strheight(colnames(web2)[1], cex = 0.6)
     
     # Initialize a vector that stores the new x positions of the interaction partners
@@ -588,17 +585,17 @@ doubleMutualist <-
       
       # This colors the uppermost boxes
       rect(pred_x, pred_y - y_width, pred_x + standPropIntPartWeb2[i], 
-           pred_y + y_width, col=col.intPartner2[i], border=col.border.pred2[i],
+           pred_y + y_width, col=col.intPartner2[i], border=col.border.intPartner2[i],
            lwd=1.2)
       
       breite <- strwidth(colnames(web2)[i], cex = 0.6 * labsize)
-      links <- pred_x + standPropIntPartWeb2[i]/2 - breite/2
+      left <- pred_x + standPropIntPartWeb2[i]/2 - breite/2
       
-      if (links < rechts && i > 1) 
+      if (left < right && i > 1) 
         hoffset = hoffset + hoehe
       
       else {
-        rechts <- pred_x + standPropIntPartWeb2[i]/2 + breite/2
+        right <- pred_x + standPropIntPartWeb2[i]/2 + breite/2
         hoffset <- 0
       }
       
@@ -612,8 +609,8 @@ doubleMutualist <-
     
     # And then we continue with the doublemutualists from the higher web perspective
     prey_x <- 0
-    links <- 0
-    rechts <- 0
+    left <- 0
+    right <- 0
     hoehe <- strheight(rownames(web2)[1], cex = 0.6)
     hoffset <- hoehe
     
@@ -642,13 +639,13 @@ doubleMutualist <-
       }
       
       breite <- strwidth(rownames(web)[i], cex = 0.6 * labsize)
-      links <- prey_x + prey_prop[i]/2 - breite/2
+      left <- prey_x + prey_prop[i]/2 - breite/2
       
-      if (links < rechts && i > 1) 
+      if (left < right && i > 1) 
         hoffset = hoffset + hoehe
       
       else {
-        rechts <- prey_x + standPropMiddleCounted[i]/2 + breite/2
+        right <- prey_x + standPropMiddleCounted[i]/2 + breite/2
         hoffset <- hoehe
       }
       
@@ -749,8 +746,8 @@ doubleMutualist <-
     
     pred_x = 0
     hoffset <- 0
-    links <- 0
-    rechts <- 0
+    left <- 0
+    right <- 0
     hoehe <- strheight(colnames(web2)[1], cex = 0.6)
     
     # Initialize a vector that stores the new x positions of the interaction partners
@@ -765,17 +762,17 @@ doubleMutualist <-
       
       # This colors the uppermost boxes
       rect(pred_x, pred_y - y_width, pred_x + standPropIntPartWeb2[i], 
-           pred_y + y_width, col="transparent", border=col.border.pred2[i], 
+           pred_y + y_width, col="transparent", border=col.border.intPartner2[i], 
            lwd=1.2)
       
       breite <- strwidth(colnames(web2)[i], cex = 0.6 * labsize)
-      links <- pred_x + standPropIntPartWeb2[i]/2 - breite/2
+      left <- pred_x + standPropIntPartWeb2[i]/2 - breite/2
       
-      if (links < rechts && i > 1) 
+      if (left < right && i > 1) 
         hoffset = hoffset + hoehe
       
       else {
-        rechts <- pred_x + standPropIntPartWeb2[i]/2 + breite/2
+        right <- pred_x + standPropIntPartWeb2[i]/2 + breite/2
         hoffset <- 0
       }
       
@@ -789,8 +786,8 @@ doubleMutualist <-
     
     # And then we continue with the doublemutualists from the higher web perspective
     prey_x <- 0
-    links <- 0
-    rechts <- 0
+    left <- 0
+    right <- 0
     hoehe <- strheight(rownames(web2)[1], cex = 0.6)
     hoffset <- hoehe
     
@@ -819,13 +816,13 @@ doubleMutualist <-
       }
       
       breite <- strwidth(rownames(web)[i], cex = 0.6 * labsize)
-      links <- prey_x + prey_prop[i]/2 - breite/2
+      left <- prey_x + prey_prop[i]/2 - breite/2
       
-      if (links < rechts && i > 1) 
+      if (left < right && i > 1) 
         hoffset = hoffset + hoehe
       
       else {
-        rechts <- prey_x + standPropMiddleCounted[i]/2 + breite/2
+        right <- prey_x + standPropMiddleCounted[i]/2 + breite/2
         hoffset <- hoehe
       }
       
