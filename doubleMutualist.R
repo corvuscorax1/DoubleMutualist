@@ -32,7 +32,7 @@ doubleMutualist <-
     col.border.doubleMutualist="grey10", col.border.doubleMutualist2="grey10",
     
     # Colorsettings for species the doublemutualists interact with (lower and upper web)
-    col.prey="grey90", col.pred2="grey85",
+    col.intPartner="grey90", col.intPartner2="grey85",
     col.border.prey="grey10", col.border.pred2="grey10",
     
     # Colorsettings for the labels
@@ -288,7 +288,7 @@ doubleMutualist <-
       
       # Draw prey species box
       rect(prey_x, prey_y - y_width, prey_x + standPropIntPartWeb1[i], 
-           prey_y + y_width, col = col.prey[i], border=col.border.prey[i], 
+           prey_y + y_width, col = col.intPartner[i], border=col.border.prey[i], 
            lwd=1.2)
       
       breite <- strwidth(rownames(web)[i], cex = 0.6 * labsize)
@@ -312,9 +312,9 @@ doubleMutualist <-
       
     }
     
-    ########################
-    # Plot interaction lines
-    ########################
+    ############################
+    ## Plot interaction lines ##
+    ############################
     
     # Initialize interaction plotting variables
     pred_x <- 0
@@ -588,7 +588,7 @@ doubleMutualist <-
       
       # This colors the uppermost boxes
       rect(pred_x, pred_y - y_width, pred_x + standPropIntPartWeb2[i], 
-           pred_y + y_width, col=col.pred2[i], border=col.border.pred2[i],
+           pred_y + y_width, col=col.intPartner2[i], border=col.border.pred2[i],
            lwd=1.2)
       
       breite <- strwidth(colnames(web2)[i], cex = 0.6 * labsize)
