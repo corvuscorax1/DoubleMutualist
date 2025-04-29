@@ -405,9 +405,9 @@ doubleMutualist <-
       
     }
     
-    ##############
-    # Replot box-borders on top to make it look nicer
-    #############
+    #####################################################
+    ## Replot box-borders on top to make it look nicer ##
+    #####################################################
     
     # Define plot boundaries
     wleft <- 0
@@ -429,8 +429,7 @@ doubleMutualist <-
     # Initialize an empty vector to save pred_x values
     middle_x_values <- c()
     
-    # We also need to remember to 
-    
+    # Remember to 
     # Plot predator species boxes
     for (i in 1:n.pred) {
       
@@ -663,9 +662,9 @@ doubleMutualist <-
       
     }
     
-    ############################
-    # Let's add the interactions
-    ############################
+    ##########################
+    ## Add the interactions ##
+    ##########################
     pred_x <- 0
     zwischenweb <- web2
     XYcoords <- matrix(ncol = 2, nrow = length(zwischenweb))
@@ -748,9 +747,9 @@ doubleMutualist <-
       
     }
     
-    ###################
-    # replot the boxes in top
-    ##################
+    #############################
+    ## replot the boxes in top ##
+    #############################
     
     pred_x = 0
     hoffset <- 0
@@ -799,7 +798,7 @@ doubleMutualist <-
     hoehe <- strheight(rownames(web2)[1], cex = 0.6)
     hoffset <- hoehe
     
-    # Now we plot the middle layer of the tripartite network from the perspective of the
+    # Now plot the middle layer of the tripartite network from the perspective of the
     # second web. E.g. double mutualists
     for (i in 1:n.prey) {
       
